@@ -1,0 +1,87 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>buyOrders</title>
+    <style>
+        h1{
+            text-align: center;
+        }
+        .input{
+            text-align: right;
+        }
+        label{
+            margin-right: 20px;
+        }
+        input{
+            width: 100px;
+        }
+        button{
+            display: block;
+            margin: 20px calc(50% - 75px);
+        }
+        .orders{
+            width: 92%;
+            margin: auto;
+        }
+        .order{
+            display: flex;  
+            justify-content: space-evenly;
+        }
+    </style>
+</head>
+<body>
+    <h1>buyOrders</h1>
+    <p>La technique du blond ;-) pour acheter une crypto vs BTC sans prendre en compte les résistances.</p>
+    <div class="input"><label for="">Nombre d'ordres</label><input id="ordersNb" type="text" value="8"></div>
+    <div class="input"><label for="">Prix maximum en BTC</label><input id="max" type="text" value="0.045"></div>
+    <div class="input"><label for="">Prix minimum en BTC</label><input id="min" type="text" value="0.030"></div>
+    <div class="input"><label for="">Valeur total à trader en BTC</label><input id="totalToTrade" type="text" value="0.3"></div>
+    <button>Donnes moi les ordres</button>
+    <div class="orders"></div>
+    <script>
+        const ordersDiv = document.querySelector('.orders');
+        const button = document.querySelector('button');
+        function getOrders(ordersNb, max, min, totalToTrade) {
+            let interval = (max - min) / ordersNb;
+            let orderPrice = max;
+            let orders = [];
+            let orderVal = totalToTrade / ordersNb;
+            let amount = orderVal / orderPrice
+            let total = amount * orderPrice
+            let masterTotal = 0;
+            for (let i = 0; i < ordersNb; i++) {
+                orders.push({
+                    'price' : parseFloat(orderPrice).toFixed(7),
+                    'amount' : parseFloat(amount).toFixed(5),
+                    'total' : parseFloat(total).toFixed(5)
+                });
+                orderPrice -= interval;
+                amount = orderVal / orderPrice
+                total = amount * orderPrice
+                masterTotal += total;
+            }
+            return orders;
+        }
+        function showResult() {
+            const ordersNb = document.getElementById('ordersNb').value;
+            const max = document.getElementById('max').value;
+            const min = document.getElementById('min').value;
+            const totalToTrade = document.getElementById('totalToTrade').value;
+            ordersDiv.innerHTML = '';
+            let orders = getOrders(ordersNb, max, min, totalToTrade);
+            let h2 = document.createElement('h2');
+            h2.innerHTML = 'Les ordres d\'achat';
+            ordersDiv.appendChild(h2);
+            orders.forEach((o) =>{
+                let order = document.createElement('div');
+                order.className = 'order';
+                order.innerHTML = `<span>prix ${o.price}</span><span>qté ${o.amount}</span><span>total ${o.total}</span>`;
+                ordersDiv.appendChild(order);
+            });
+        }
+        button.addEventListener('click', showResult, false);
+    </script>
+</body>
+</html>
