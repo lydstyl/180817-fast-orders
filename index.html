@@ -12,7 +12,12 @@
         h1{
             text-align: center;
         }
+        p{
+            padding: 0 20px;
+        }
         .input{
+            margin: 16px 0;
+            padding: 0 20px;
             text-align: right;
         }
         label{
@@ -21,9 +26,9 @@
         input{
             width: 100px;
         }
-        button{
-            display: block;
-            margin: 20px calc(50% - 75px);
+        .buttons{
+            width: 130px;
+            margin: auto;
         }
         .orders{
             width: 92%;
@@ -41,12 +46,16 @@
     <div class="input"><label for="">Nombre d'ordres</label><input id="ordersNb" type="text" value="8"></div>
     <div class="input"><label for="">Prix maximum en BTC</label><input id="max" type="text" value="0.045"></div>
     <div class="input"><label for="">Prix minimum en BTC</label><input id="min" type="text" value="0.030"></div>
-    <div class="input"><label for="">Valeur total à trader en BTC</label><input id="totalToTrade" type="text" value="0.3"></div>
-    <button>Donnes moi les ordres</button>
+    <div class="input"><label for="">Valeur total à trader en BTC si achat ou en crypto à vendre si vente</label><input id="totalToTrade" type="text" value="0.3"></div>
+    <div class="buttons">
+        <button>Acheter</button>
+        <button class="sell">Vendre</button>
+    </div>
     <div class="orders"></div>
     <script>
         const ordersDiv = document.querySelector('.orders');
         const button = document.querySelector('button');
+        const sell = document.querySelector('.sell');
         function getOrders(ordersNb, max, min, totalToTrade) {
             let interval = (max - min) / ordersNb;
             let orderPrice = max;
@@ -55,7 +64,7 @@
             let amount = orderVal / orderPrice
             let total = amount * orderPrice
             let masterTotal = 0;
-            for (let i = 0; i < ordersNb; i++) {
+            for (let i = 0; i < parseInt(ordersNb, 10) + 1; i++) {
                 orders.push({
                     'price' : parseFloat(orderPrice).toFixed(7),
                     'amount' : parseFloat(amount).toFixed(5),
@@ -68,7 +77,26 @@
             }
             return orders;
         }
-        function showResult() {
+        function getOrdersSell(ordersNb, max, min, totalToTrade) {
+            let interval = parseFloat(max - min) / parseFloat(ordersNb);
+            let orderPrice = parseFloat(min);
+            let orders = [];
+            let amount = totalToTrade / ordersNb;
+            let total = amount * orderPrice
+            let masterTotal = 0;
+            for (let i = -1; i < ordersNb; i++) {
+                orders.push({
+                    'price' : parseFloat(orderPrice).toFixed(7),
+                    'amount' : parseFloat(amount).toFixed(5),
+                    'total' : parseFloat(total).toFixed(5)
+                });
+                orderPrice += interval;
+                total = amount * orderPrice
+                masterTotal += total;
+            }
+            return orders;
+        }
+        function showResult(sell) {
             const ordersNb = document.getElementById('ordersNb').value;
             const max = document.getElementById('max').value;
             const min = document.getElementById('min').value;
@@ -76,7 +104,7 @@
             ordersDiv.innerHTML = '';
             let orders = getOrders(ordersNb, max, min, totalToTrade);
             let h2 = document.createElement('h2');
-            h2.innerHTML = 'Les ordres d\'achat';
+            h2.innerHTML = 'Les ordres';
             ordersDiv.appendChild(h2);
             orders.forEach((o) =>{
                 let order = document.createElement('div');
@@ -85,7 +113,25 @@
                 ordersDiv.appendChild(order);
             });
         }
+        function showSell() {
+            const ordersNb = document.getElementById('ordersNb').value;
+            const max = document.getElementById('max').value;
+            const min = document.getElementById('min').value;
+            const totalToTrade = document.getElementById('totalToTrade').value;
+            ordersDiv.innerHTML = '';
+            let orders = getOrdersSell(ordersNb, max, min, totalToTrade);//
+            let h2 = document.createElement('h2');
+            h2.innerHTML = 'Les ordres';
+            ordersDiv.appendChild(h2);
+            orders.forEach((o) =>{
+                let order = document.createElement('div');
+                order.className = 'order';
+                order.innerHTML = `<span>prix ${o.price}</span><span>qté ${o.amount}</span><span>total ${o.total}</span>`;
+                ordersDiv.appendChild(order);
+            });
+        }        
         button.addEventListener('click', showResult, false);
+        sell.addEventListener('click', showSell, false);
     </script>
 </body>
 </html>
