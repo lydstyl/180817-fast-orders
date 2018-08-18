@@ -56,6 +56,10 @@
         const ordersDiv = document.querySelector('.orders');
         const button = document.querySelector('button');
         const sell = document.querySelector('.sell');
+        let sumQte = sumTotal = 0;
+        /**
+         * Return an array with all buy orders. Each order is an object
+        **/
         function getOrders(ordersNb, max, min, totalToTrade) {
             let interval = (max - min) / ordersNb;
             let orderPrice = max;
@@ -77,13 +81,16 @@
             }
             return orders;
         }
+        /**
+         * Return an array with all sell orders. Each order is an object
+        **/
         function getOrdersSell(ordersNb, max, min, totalToTrade) {
             let interval = parseFloat(max - min) / parseFloat(ordersNb);
             let orderPrice = parseFloat(min);
             let orders = [];
             let amount = totalToTrade / ordersNb;
             let total = amount * orderPrice
-            let masterTotal = 0;
+            //let masterTotal = 0;
             for (let i = -1; i < ordersNb; i++) {
                 orders.push({
                     'price' : parseFloat(orderPrice).toFixed(7),
@@ -92,11 +99,26 @@
                 });
                 orderPrice += interval;
                 total = amount * orderPrice
-                masterTotal += total;
+                //masterTotal += total;
             }
             return orders;
         }
-        function showResult(sell) {
+        /**
+         * Create a tag with a buy or sell order and append it to the orders div
+        **/
+        function appendOrder(price, amount, total, sum) {
+            let order = document.createElement('div');
+            order.className = 'order';
+            order.innerHTML = `<span>prix ${price}</span><span>qté ${amount}</span><span>total ${total}</span>`;
+            if (sum) {
+                order.innerHTML = `<span>${price}</span><span>qté ${amount}</span><span>total ${total}</span>`;    
+            }
+            ordersDiv.appendChild(order);
+        }
+        /**
+         * Show price, quantity and total of each buy order
+        **/
+        function showResult() {
             const ordersNb = document.getElementById('ordersNb').value;
             const max = document.getElementById('max').value;
             const min = document.getElementById('min').value;
@@ -107,12 +129,16 @@
             h2.innerHTML = 'Les ordres';
             ordersDiv.appendChild(h2);
             orders.forEach((o) =>{
-                let order = document.createElement('div');
-                order.className = 'order';
-                order.innerHTML = `<span>prix ${o.price}</span><span>qté ${o.amount}</span><span>total ${o.total}</span>`;
-                ordersDiv.appendChild(order);
+                appendOrder(o.price, o.amount, o.total);
+                sumQte += parseFloat(o.amount);
+                sumTotal += parseFloat(o.total);
             });
+            appendOrder('___TOTAL___ ', sumQte.toFixed(5), sumTotal.toFixed(5), true)
+            sumQte = sumTotal = 0;
         }
+        /**
+         * Show price, quantity and total of each sell order
+        **/
         function showSell() {
             const ordersNb = document.getElementById('ordersNb').value;
             const max = document.getElementById('max').value;
@@ -124,11 +150,12 @@
             h2.innerHTML = 'Les ordres';
             ordersDiv.appendChild(h2);
             orders.forEach((o) =>{
-                let order = document.createElement('div');
-                order.className = 'order';
-                order.innerHTML = `<span>prix ${o.price}</span><span>qté ${o.amount}</span><span>total ${o.total}</span>`;
-                ordersDiv.appendChild(order);
+                appendOrder(o.price, o.amount, o.total);
+                sumQte += parseFloat(o.amount);
+                sumTotal += parseFloat(o.total);
             });
+            appendOrder('___TOTAL___ ', sumQte.toFixed(5), sumTotal.toFixed(5), true)
+            sumQte = sumTotal = 0;
         }        
         button.addEventListener('click', showResult, false);
         sell.addEventListener('click', showSell, false);
