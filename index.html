@@ -61,14 +61,14 @@
          * Return an array with all buy orders. Each order is an object
         **/
         function getOrders(ordersNb, max, min, totalToTrade) {
-            let interval = (max - min) / ordersNb;
+            let interval = (max - min) / (parseInt(ordersNb, 10) - 1);
             let orderPrice = max;
             let orders = [];
             let orderVal = totalToTrade / ordersNb;
             let amount = orderVal / orderPrice
             let total = amount * orderPrice
             let masterTotal = 0;
-            for (let i = 0; i < parseInt(ordersNb, 10) + 1; i++) {
+            for (let i = 0; i < parseInt(ordersNb, 10); i++) {
                 orders.push({
                     'price' : parseFloat(orderPrice).toFixed(7),
                     'amount' : parseFloat(amount).toFixed(5),
@@ -85,13 +85,12 @@
          * Return an array with all sell orders. Each order is an object
         **/
         function getOrdersSell(ordersNb, max, min, totalToTrade) {
-            let interval = parseFloat(max - min) / parseFloat(ordersNb);
+            let interval = (max - min) / (parseInt(ordersNb, 10) - 1);
             let orderPrice = parseFloat(min);
             let orders = [];
             let amount = totalToTrade / ordersNb;
             let total = amount * orderPrice
-            //let masterTotal = 0;
-            for (let i = -1; i < ordersNb; i++) {
+            for (let i = -1; i < (parseInt(ordersNb, 10) - 1); i++) {
                 orders.push({
                     'price' : parseFloat(orderPrice).toFixed(7),
                     'amount' : parseFloat(amount).toFixed(5),
