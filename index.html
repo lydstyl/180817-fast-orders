@@ -144,7 +144,18 @@
         let orders = getOrders(ordersNb, max, min, totalToTrade)
         let h2 = document.createElement('h2')
         h2.innerHTML = 'Les ordres'
+
         ordersDiv.appendChild(h2)
+
+        // fix asked by Antoine Bonduelle 2020 - 07
+        orders.sort((a, b) => {
+          if (a.price > b.price) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+
         orders.forEach((o) => {
           appendOrder(o.price, o.amount, o.total)
           sumQte += parseFloat(o.amount)
@@ -172,14 +183,14 @@
         h2.innerHTML = 'Les ordres'
         ordersDiv.appendChild(h2)
 
-        // fix asked by Antoine Bonduelle 2020 - 07
-        orders.sort((a, b) => {
-          if (a.price < b.price) {
-            return 1
-          } else {
-            return -1
-          }
-        })
+        // // fix asked by Antoine Bonduelle 2020 - 07
+        // orders.sort((a, b) => {
+        //   if (a.price < b.price) {
+        //     return 1
+        //   } else {
+        //     return -1
+        //   }
+        // })
 
         orders.forEach((o) => {
           appendOrder(o.price, o.amount, o.total)
