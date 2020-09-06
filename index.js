@@ -70,7 +70,7 @@ function appendOrder(price, amount, total, sum) {
   if (sum) {
     order.innerHTML = `<span>${price}</span><span>qté ${amount}</span><span>total ${total}</span>`
   } else {
-    order.innerHTML = `<span>prix </span> <span class="bg-danger" >${price}</span> <span>qté </span>  <span class="bg-info" >${amount}</span> <span>total </span> <span class="bg-warning" >${total}</span>`
+    order.innerHTML = `<span>prix </span> <span class="bg-danger text-white" >${price}</span> <span>qté </span>  <span class="bg-info" >${amount}</span> <span>total </span> <span class="bg-warning" >${total}</span>`
   }
 
   ordersDiv.appendChild(order)
@@ -114,6 +114,8 @@ function showResult() {
     true
   )
   sumQte = sumTotal = 0
+
+  ordersDiv.className = 'orders w-100 m-auto mt-5 border border-dark rounded'
 }
 
 /**
@@ -139,6 +141,8 @@ function showSell() {
 
   appendOrder('___TOTAL___ ', sumQte.toFixed(5), sumTotal.toFixed(5), true)
   sumQte = sumTotal = 0
+
+  ordersDiv.className = 'orders w-100 m-auto mt-5 border border-dark rounded'
 }
 
 /**

@@ -17,34 +17,55 @@
   <body>
     <h1>fastOrders</h1>
 
-    <p>La technique d'un blond ;-) pour acheter ou vendre une crypto.</p>
+    <p class="text-center">
+      La technique d'un blond ;-) pour acheter ou vendre une crypto.
+    </p>
 
-    <div class="input">
-      <label for="">Nombre d'ordres</label
-      ><input id="ordersNb" type="number" step="1" />
+    <div class="container">
+      <form class="mt-5">
+        <div class="input-group w-80 m-auto m-auto mb-3">
+          <span class="input-group-text">Nombre d'ordres</span>
+          <input id="ordersNb" type="number" class="form-control text-right" />
+        </div>
+
+        <div class="input-group w-80 m-auto mb-3">
+          <span class="input-group-text bg-danger text-white">Prix max</span>
+          <input
+            class="form-control text-right"
+            id="max"
+            type="number"
+            step="0.00001"
+          />
+        </div>
+
+        <div class="input-group w-80 m-auto mb-3">
+          <span class="input-group-text bg-danger text-white">Prix min</span>
+          <input
+            class="form-control text-right"
+            id="min"
+            type="number"
+            step="0.00001"
+          />
+        </div>
+
+        <div class="input-group w-80 m-auto mb-3">
+          <span class="input-group-text">Total à trader</span>
+          <input
+            class="form-control text-right"
+            id="totalToTrade"
+            type="number"
+            step="0.00001"
+          />
+        </div>
+      </form>
+
+      <div class="buttons w-80 m-auto mt-5">
+        <button class="btn btn-success">Acheter</button>
+        <button class="sell btn btn-danger">Vendre</button>
+      </div>
+
+      <div class="orders"></div>
     </div>
-
-    <div class="input">
-      <label for="">Prix maximum</label
-      ><input class="bg-danger" id="max" type="number" step="0.00001" />
-    </div>
-
-    <div class="input">
-      <label for="">Prix minimum</label
-      ><input class="bg-danger" id="min" type="number" step="0.00001" />
-    </div>
-
-    <div class="input">
-      <label for="">Valeur total à trader</label
-      ><input id="totalToTrade" type="number" step="0.00001" />
-    </div>
-
-    <div class="buttons">
-      <button>Acheter</button>
-      <button class="sell">Vendre</button>
-    </div>
-
-    <div class="orders"></div>
 
     <script
       src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
