@@ -14,9 +14,8 @@ let initValues = {
 
 function getInitialValues() {
   const vals = JSON.parse(localStorage.getItem('fastOrdersVals'))
-  console.log('getInitialValues -> vals', vals)
 
-  if (vals.max || vals.min) {
+  if (vals) {
     initValues = vals
   }
 }
@@ -35,7 +34,6 @@ function saveInitialValues() {
   }
 
   localStorage.setItem('fastOrdersVals', JSON.stringify(vals))
-  console.log('saveInitialValues -> JSON.stringify(vals)', JSON.stringify(vals))
 }
 
 /**
