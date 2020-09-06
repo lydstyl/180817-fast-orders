@@ -1,0 +1,50 @@
+body {
+  max-width: 600px;
+  margin: auto;
+  background-color: lightgray;
+
+  --spacer: 60px;
+}
+
+h1 {
+  text-align: center;
+}
+
+p {
+  margin-bottom: var(--spacer);
+  padding: 0 20px;
+}
+
+.input {
+  margin: 16px 0;
+  padding: 0 20px;
+  text-align: right;
+}
+
+label {
+  margin-right: 20px;
+}
+
+input {
+  width: 100px;
+}
+
+.buttons {
+  margin: var(--spacer);
+  display: flex;
+  justify-content: space-around;
+}
+
+.orders {
+  width: 92%;
+  margin: auto;
+}
+
+.order {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.order:last-child {
+  margin-top: var(--spacer);
+}
