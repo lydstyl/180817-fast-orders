@@ -5,11 +5,37 @@ let sumQte = (sumTotal = 0)
 
 const PRECISION = 4
 
-initValues = {
+let initValues = {
   ordersNb: 3,
   max: 0.00042,
   min: 0.00037,
   totalToTrade: 0.2,
+}
+
+function getInitialValues() {
+  const vals = JSON.parse(localStorage.getItem('fastOrdersVals'))
+  console.log('getInitialValues -> vals', vals)
+
+  if (vals.max || vals.min) {
+    initValues = vals
+  }
+}
+
+function saveInitialValues() {
+  const ordersNb = document.getElementById('ordersNb').value
+  const max = document.getElementById('max').value
+  const min = document.getElementById('min').value
+  const totalToTrade = document.getElementById('totalToTrade').value
+
+  const vals = {
+    ordersNb,
+    max,
+    min,
+    totalToTrade,
+  }
+
+  localStorage.setItem('fastOrdersVals', JSON.stringify(vals))
+  console.log('saveInitialValues -> JSON.stringify(vals)', JSON.stringify(vals))
 }
 
 /**
@@ -76,6 +102,11 @@ function appendOrder(price, amount, total, sum) {
   ordersDiv.appendChild(order)
 }
 
+function addClassesToOrdersDiv() {
+  ordersDiv.className =
+    'orders w-100 m-auto mt-5 pt-3 pb-3 border border-dark rounded'
+}
+
 /**
  * Show price, quantity and total of each buy order
  **/
@@ -115,7 +146,8 @@ function showResult() {
   )
   sumQte = sumTotal = 0
 
-  ordersDiv.className = 'orders w-100 m-auto mt-5 border border-dark rounded'
+  addClassesToOrdersDiv()
+  saveInitialValues()
 }
 
 /**
@@ -142,7 +174,8 @@ function showSell() {
   appendOrder('___TOTAL___ ', sumQte.toFixed(5), sumTotal.toFixed(5), true)
   sumQte = sumTotal = 0
 
-  ordersDiv.className = 'orders w-100 m-auto mt-5 border border-dark rounded'
+  addClassesToOrdersDiv()
+  saveInitialValues()
 }
 
 /**
@@ -158,6 +191,7 @@ function initialize(vals) {
   })
 }
 
+getInitialValues()
 initialize(initValues)
 
 button.addEventListener('click', showResult, false)
