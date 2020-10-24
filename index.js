@@ -81,7 +81,7 @@ function getInitialValues() {
 /**
  * Append the url to share, with form values in .orders div
  **/
-function shareUrlToShare() {
+function appendUrlToShare() {
   const vals = JSON.parse(localStorage.getItem('fastOrdersVals'))
 
   const url = new URL(window.location.href)
@@ -229,7 +229,7 @@ function showResult() {
   addClassesToOrdersDiv()
   saveInitialValues()
 
-  shareUrlToShare()
+  appendUrlToShare()
 }
 
 /**
@@ -259,7 +259,7 @@ function showSell() {
   addClassesToOrdersDiv()
   saveInitialValues()
 
-  shareUrlToShare()
+  appendUrlToShare()
 }
 
 /**
