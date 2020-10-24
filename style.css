@@ -40,6 +40,19 @@ input {
   margin: auto;
 }
 
+.orders h2 {
+  text-align: center;
+}
+
+.orders .link-box {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.link {
+  color: red;
+}
+
 .order {
   display: flex;
   justify-content: space-evenly;

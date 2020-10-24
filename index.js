@@ -12,14 +12,96 @@ let initValues = {
   totalToTrade: 0.2,
 }
 
-function getInitialValues() {
-  const vals = JSON.parse(localStorage.getItem('fastOrdersVals'))
+/**
+ * Return the values of 1 parameter in the url
+ **/
+function getParameterByName(name, url = window.location.href) {
+  name = name.replace(/[\[\]]/g, '\\$&')
 
-  if (vals) {
-    initValues = vals
+  const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url)
+
+  if (!results) return null
+
+  if (!results[2]) return ''
+
+  let parameter = decodeURIComponent(results[2].replace(/\+/g, ' '))
+
+  return parameter
+}
+
+/**
+ * Return the value of 1 parameter in the url as a float
+ **/
+function getFloatParamByName(name) {
+  const param = getParameterByName(name)
+
+  return parseFloat(param)
+}
+
+/**
+ * Return the 4 initiales values in the url or null
+ * Url exemple : url?ordersNb=20&max=0.00088343&min=0.00021351&totalToTrade=0.2
+ **/
+function getCurrentUrlParameters() {
+  let ordersNb = getParameterByName('ordersNb')
+  ordersNb = parseInt(ordersNb, 10)
+
+  const max = getFloatParamByName('max'),
+    min = getFloatParamByName('min'),
+    totalToTrade = getFloatParamByName('totalToTrade')
+
+  const parameters = { ordersNb, max, min, totalToTrade }
+
+  console.log('getCurrentUrlParameters -> parameters', parameters)
+
+  if (ordersNb && max && min && totalToTrade) {
+    return parameters
+  }
+
+  return null
+}
+
+/**
+ * Get and set initial values of the form from url parameters or local storage
+ **/
+function getInitialValues() {
+  const parameters = getCurrentUrlParameters()
+
+  if (parameters) {
+    initValues = parameters
+  } else {
+    const vals = JSON.parse(localStorage.getItem('fastOrdersVals'))
+    if (vals) {
+      initValues = vals
+    }
   }
 }
 
+/**
+ * Append the url to share, with form values in .orders div
+ **/
+function shareUrlToShare() {
+  const vals = JSON.parse(localStorage.getItem('fastOrdersVals'))
+
+  const url = new URL(window.location.href)
+
+  Object.keys(vals).forEach(paramName => {
+    const val = vals[paramName]
+
+    url.searchParams.set(paramName, val)
+  })
+
+  const urlToShare = url.href
+
+  const link = `<div class="link-box"><span>URL à partager: </span><span class="link">${urlToShare}</span></div>`
+
+  document.querySelector('.orders').insertAdjacentHTML('beforeend', link)
+}
+
+/**
+ * Save form values to local storage
+ **/
 function saveInitialValues() {
   const ordersNb = document.getElementById('ordersNb').value
   const max = document.getElementById('max').value
@@ -130,7 +212,7 @@ function showResult() {
     }
   })
 
-  orders.forEach((o) => {
+  orders.forEach(o => {
     appendOrder(o.price, o.amount, o.total)
     sumQte += parseFloat(o.amount)
     sumTotal += parseFloat(o.total)
@@ -146,6 +228,8 @@ function showResult() {
 
   addClassesToOrdersDiv()
   saveInitialValues()
+
+  shareUrlToShare()
 }
 
 /**
@@ -163,7 +247,7 @@ function showSell() {
   h2.innerHTML = 'Les ordres'
   ordersDiv.appendChild(h2)
 
-  orders.forEach((o) => {
+  orders.forEach(o => {
     appendOrder(o.price, o.amount, o.total)
     sumQte += parseFloat(o.amount)
     sumTotal += parseFloat(o.total)
@@ -174,6 +258,8 @@ function showSell() {
 
   addClassesToOrdersDiv()
   saveInitialValues()
+
+  shareUrlToShare()
 }
 
 /**
@@ -184,7 +270,7 @@ function showSell() {
 function initialize(vals) {
   const { ordersNb, max, min, totalToTrade } = vals
 
-  document.querySelectorAll('[type=number]').forEach((input) => {
+  document.querySelectorAll('[type=number]').forEach(input => {
     input.value = vals[input.id]
   })
 }
