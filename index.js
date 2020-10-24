@@ -12,6 +12,14 @@ let initValues = {
   totalToTrade: 0.2,
 }
 
+getInitialValues()
+
+initialize(initValues)
+
+button.addEventListener('click', showResult, false)
+
+sell.addEventListener('click', showSell, false)
+
 /**
  * Return the values of 1 parameter in the url
  **/
@@ -176,7 +184,7 @@ function appendOrder(price, amount, total, sum) {
   if (sum) {
     order.innerHTML = `<span>${price}</span><span>qté ${amount}</span><span>total ${total}</span>`
   } else {
-    order.innerHTML = `<span>prix </span> <span class="bg-danger text-white" >${price}</span> <span>qté </span>  <span class="bg-info" >${amount}</span> <span>total </span> <span class="bg-warning" >${total}</span>`
+    order.innerHTML = `<span>prix </span> <span class="bg-danger text-white clipboard" >${price}</span> <span>qté </span>  <span class="bg-info clipboard" >${amount}</span> <span>total </span> <span class="bg-warning clipboard" >${total}</span>`
   }
 
   ordersDiv.appendChild(order)
@@ -230,6 +238,8 @@ function showResult() {
   saveInitialValues()
 
   appendUrlToShare()
+
+  setCopyValToClipboardListener()
 }
 
 /**
@@ -260,6 +270,8 @@ function showSell() {
   saveInitialValues()
 
   appendUrlToShare()
+
+  setCopyValToClipboardListener()
 }
 
 /**
@@ -275,9 +287,50 @@ function initialize(vals) {
   })
 }
 
-getInitialValues()
-initialize(initValues)
+// The functions below are here so the user can copy values to his clipboard with on click
 
-button.addEventListener('click', showResult, false)
+function setCopyValToClipboardListener() {
+  document.querySelectorAll('.orders .clipboard').forEach(clipboard => {
+    clipboard.addEventListener('click', evt => {
+      copyTextToClipboard(evt.target.textContent)
+    })
+  })
+}
 
-sell.addEventListener('click', showSell, false)
+function fallbackCopyTextToClipboard(text) {
+  var textArea = document.createElement('textarea')
+  textArea.value = text
+
+  // Avoid scrolling to bottom
+  textArea.style.top = '0'
+  textArea.style.left = '0'
+  textArea.style.position = 'fixed'
+
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
+
+  try {
+    var successful = document.execCommand('copy')
+    var msg = successful ? 'successful' : 'unsuccessful'
+    console.log('Fallback: Copying text command was ' + msg)
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err)
+  }
+
+  document.body.removeChild(textArea)
+}
+function copyTextToClipboard(text) {
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text)
+    return
+  }
+  navigator.clipboard.writeText(text).then(
+    function () {
+      console.log('Async: Copying to clipboard was successful!')
+    },
+    function (err) {
+      console.error('Async: Could not copy text: ', err)
+    }
+  )
+}

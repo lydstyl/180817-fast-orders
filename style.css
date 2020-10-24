@@ -61,3 +61,7 @@ input {
 .order:last-child {
   margin-top: var(--spacer);
 }
+
+.clipboard {
+  cursor: pointer;
+}
